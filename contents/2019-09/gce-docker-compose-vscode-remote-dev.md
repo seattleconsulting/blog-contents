@@ -1,4 +1,4 @@
-# GCE + docker-composeでリモート開発環境を構築する
+# GCE + docker-compose + VSCodeでリモート開発環境を構築する
 
 これを書いているのは2019年の9月ですが、今年はあまり暑くなくて過ごしやすい夏でしたね。
 
@@ -35,47 +35,11 @@ GCPアカウントの作成・設定は、この辺りを参考に適宜お願�
 
 作成したプロジェクトでVMインスタンスを作成します。
 
---削除ここから--
-今回はdocker入りコンテナを使うために、
-ブートディスクを `Container-Optimized OS 76-12239.60.0 stable` に変更してください。
-（自前でdocker, docker-compose入れる前提であれば、他のディストリビューションでも問題ないです）
-
-Container-Optimized OS の機能と利点はこちら。
-<https://cloud.google.com/container-optimized-os/docs/concepts/features-and-benefits?hl=ja>
---削除ここまで--
-
 ブートディスクはDebian9のまま、
 リージョン、インスタンスサイズはお好みで。最初のビルド時はn1-standardくらいが良いと思います。
 あと、複数プロジェクトを同インスタンス内で使いたい場合は、storageが10GBだと足りなくなる可能性が高いので増やした方がよいやも。
 
 ## GCEインスタンス上で、個別プロジェクトのdocker-compose実行
-
---削除ここから--
-次にdocker / docker-composeの設定です。
-基本はこのページの通り。
-<https://cloud.google.com/community/tutorials/docker-compose-on-container-optimized-os>
-
-docker-composeを導入するために、以下を実行していきます。
-dockerはすでにインストールされているので、docker-composeのエイリアスを作ります。
-なぜかはわかりませんが、docker-composeをインストールするのではなく、dockerコマンドでやりくりするようです。
-
-1. VMインスタンス一覧画面のSSHボタンでブラウザターミナルを開く
-2. `docker run docker/compose:1.24.0 version`
-
-3. ```docker run --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v "$PWD:$PWD" \
-    -w="$PWD" \
-    docker/compose:1.24.0 up```
-
-4. ```echo alias docker-compose="'"'docker run --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v "$PWD:$PWD" \
-    -w="$PWD" \
-    docker/compose:1.24.0'"'" >> ~/.bashrc```
-
-5. `source ~/.bashrc`
---削除ここまで--
 
 ### git, docker. docker-composeの設定
 
